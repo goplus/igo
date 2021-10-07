@@ -1,18 +1,18 @@
 package cltest
 
 import (
+	"go/ast"
+	"go/token"
 	"io/ioutil"
 	"strings"
 	"testing"
 
-	"github.com/goplus/gop/ast"
-	"github.com/goplus/gop/cl"
-	"github.com/goplus/gop/parser"
-	"github.com/goplus/gop/token"
+	"github.com/goplus/igo/internal/cl"
+	"github.com/goplus/igo/internal/parser"
 	"github.com/qiniu/x/log"
 
-	exec "github.com/goplus/gop/exec/bytecode"
-	_ "github.com/goplus/gop/lib" // libraries
+	exec "github.com/goplus/igo/internal/exec/bytecode"
+	_ "github.com/goplus/igo/lib" // libraries
 )
 
 // -----------------------------------------------------------------------------

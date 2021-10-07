@@ -2,17 +2,17 @@ package cltest
 
 import (
 	"fmt"
+	"go/token"
 	"os"
 	"testing"
 
-	"github.com/goplus/gop/ast/asttest"
-	"github.com/goplus/gop/cl"
-	"github.com/goplus/gop/parser"
-	"github.com/goplus/gop/token"
+	"github.com/goplus/igo/internal/ast/asttest"
+	"github.com/goplus/igo/internal/cl"
+	"github.com/goplus/igo/internal/parser"
 	"github.com/qiniu/x/ts"
 
-	exec "github.com/goplus/gop/exec/bytecode"
-	_ "github.com/goplus/gop/lib" // libraries
+	exec "github.com/goplus/igo/internal/exec/bytecode"
+	_ "github.com/goplus/igo/lib" // libraries
 )
 
 // -----------------------------------------------------------------------------
@@ -20,7 +20,7 @@ import (
 // Expect runs a script and check expected output and if panic or not.
 func Expect(t *testing.T, script string, expected string, panicMsg ...interface{}) {
 	fset := token.NewFileSet()
-	fs := asttest.NewSingleFileFS("/foo", "bar.gop", script)
+	fs := asttest.NewSingleFileFS("/foo", "bar.go", script)
 	pkgs, err := parser.ParseFSDir(fset, fs, "/foo", nil, 0)
 	if err != nil || len(pkgs) != 1 {
 		t.Fatal("ParseFSDir failed:", err, len(pkgs))
@@ -49,7 +49,7 @@ func Expect(t *testing.T, script string, expected string, panicMsg ...interface{
 // Call runs a script and gets the last expression value to check
 func Call(t *testing.T, script string, idx ...int) *ts.TestCase {
 	fset := token.NewFileSet()
-	fs := asttest.NewSingleFileFS("/foo", "bar.gop", script)
+	fs := asttest.NewSingleFileFS("/foo", "bar.go", script)
 	pkgs, err := parser.ParseFSDir(fset, fs, "/foo", nil, 0)
 	if err != nil || len(pkgs) != 1 {
 		t.Fatal("ParseFSDir failed:", err, len(pkgs))
