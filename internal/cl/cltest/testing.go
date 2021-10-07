@@ -47,7 +47,7 @@ func Expect(t *testing.T, script string, expected string, panicMsg ...interface{
 // -----------------------------------------------------------------------------
 
 // Call runs a script and gets the last expression value to check
-func Call(t *testing.T, script string, idx ...int) *ts.TestCase {
+func Call(t *testing.T, noEntrypoint bool, script string, idx ...int) *ts.TestCase {
 	fset := token.NewFileSet()
 	fs := asttest.NewSingleFileFS("/foo", "bar.go", script)
 	pkgs, err := parser.ParseFSDir(fset, fs, "/foo", nil, 0)
@@ -57,6 +57,12 @@ func Call(t *testing.T, script string, idx ...int) *ts.TestCase {
 
 	return ts.New(t).Call(func() interface{} {
 		bar := pkgs["main"]
+		if noEntrypoint {
+			for _, f := range bar.Files {
+				f.Package = token.NoPos // mark noEntrypoint
+				break
+			}
+		}
 		b := exec.NewBuilder(nil)
 		pkg, err := cl.NewPackage(b.Interface(), bar, fset, cl.PkgActClMain)
 		if err != nil {

@@ -31,8 +31,8 @@ var testAssign = `
 `
 
 func TestAssign(t *testing.T) {
-	cltest.Call(t, testAssign).Equal("Hello")
-	cltest.Call(t, testAssign, -2).Equal(123)
+	cltest.Call(t, true, testAssign).Equal("Hello")
+	cltest.Call(t, true, testAssign, -2).Equal(123)
 }
 
 // -----------------------------------------------------------------------------
@@ -314,53 +314,6 @@ func TestClosurev(t *testing.T) {
 
 // -----------------------------------------------------------------------------
 
-var testForPhraseStmt = `
-	sum := 0
-	for x <- [1, 3, 5, 7, 11, 13, 17], x > 3 {
-		sum += x
-	}
-	sum
-`
-
-func TestForPhraseStmt(t *testing.T) {
-	cltest.Call(t, testForPhraseStmt).Equal(53)
-}
-
-// -----------------------------------------------------------------------------
-
-var testForPhraseStmt2 = `
-	sum := 0
-	for x <- [1, 3, 5, 7, 11, 13, 17] {
-		if x > 3 {
-			sum += x
-		}
-	}
-	sum
-`
-
-func TestForPhraseStmt2(t *testing.T) {
-	cltest.Call(t, testForPhraseStmt2).Equal(53)
-}
-
-// -----------------------------------------------------------------------------
-
-var testForPhraseStmt3 = `
-	fns := make([]func() int, 3)
-	for i, x <- [3, 15, 777] {
-		v := x
-		fns[i] = func() int {
-			return v
-		}
-	}
-	println("values:", fns[0](), fns[1](), fns[2]())
-`
-
-func _TestForPhraseStmt3(t *testing.T) {
-	cltest.Expect(t, testForPhraseStmt3, "values: 3 15 777\n")
-}
-
-// -----------------------------------------------------------------------------
-
 var testForRangeClauses = map[string]testData{
 	"no_kv_range_list": {`sum:=0
 					for range [1,3,5,7] {
@@ -491,7 +444,7 @@ var testRangeStmt2 = `
 `
 
 func TestRangeStmt2(t *testing.T) {
-	cltest.Call(t, testRangeStmt2).Equal(53)
+	cltest.Call(t, true, testRangeStmt2).Equal(53)
 }
 
 // -----------------------------------------------------------------------------

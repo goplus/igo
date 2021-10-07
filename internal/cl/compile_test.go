@@ -203,7 +203,7 @@ func TestStruct(t *testing.T) {
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, err = NewPackage(b.Interface(), bar, fset, PkgActClMain)
+	_, _, err = newPackage(b, bar, fset, true)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}
@@ -227,7 +227,8 @@ func TestStruct(t *testing.T) {
 
 func TestImports(t *testing.T) {
 	fset := token.NewFileSet()
-	pkgs, err := parser.Parse(fset, "", `fmt.Println("hello")`, 0)
+	testCode := asttest.NewSingleFileFS("/foo", "bar.go", `fmt.Println("hello")`)
+	pkgs, err := parser.ParseFSDir(fset, testCode, "/foo", nil, 0)
 	if err != nil || len(pkgs) != 1 {
 		t.Fatal("ParseFSDir failed:", err, len(pkgs))
 	}
@@ -236,6 +237,10 @@ func TestImports(t *testing.T) {
 	b := exec.NewBuilder(nil)
 	imports := make(map[string]string)
 	imports["fmt"] = "fmt"
+	for _, f := range bar.Files { // mark noEntrypoint
+		f.Package = token.NoPos
+		break
+	}
 	_, err = NewPackageEx(b.Interface(), bar, fset, PkgActClMain, imports)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
