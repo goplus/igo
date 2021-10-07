@@ -1,3 +1,6 @@
+.DS_Store
+_gop/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
