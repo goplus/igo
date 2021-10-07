@@ -38,8 +38,8 @@ func init() {
 }
 
 func newPackage(
-	out *exec.Builder, pkg *ast.Package, fset *token.FileSet) (p *Package, noExecCtx bool, err error) {
-	p, ctx, err := newPackageEx(out, pkg, fset)
+	out *exec.Builder, pkg *ast.Package, fset *token.FileSet, noEntrypoint bool) (p *Package, noExecCtx bool, err error) {
+	p, ctx, err := newPackageEx(out, pkg, fset, noEntrypoint)
 	if err != nil {
 		return
 	}
@@ -49,7 +49,13 @@ func newPackage(
 }
 
 func newPackageEx(
-	out *exec.Builder, pkg *ast.Package, fset *token.FileSet) (p *Package, ctx *blockCtx, err error) {
+	out *exec.Builder, pkg *ast.Package, fset *token.FileSet, noEntrypoint bool) (p *Package, ctx *blockCtx, err error) {
+	if noEntrypoint {
+		for _, f := range pkg.Files {
+			f.Package = token.NoPos
+			break
+		}
+	}
 	b := out.Interface()
 	if p, err = NewPackage(b, pkg, fset, PkgActClMain); err != nil {
 		return
@@ -62,7 +68,7 @@ func newPackageEx(
 
 // -----------------------------------------------------------------------------
 
-var fsTestBasic = asttest.NewSingleFileFS("/foo", "bar.gop", `
+var fsTestBasic = asttest.NewSingleFileFS("/foo", "bar.go", `
 	println("Hello", "xsw", "- nice to meet you!")
 	println("Hello, world!")
 	return
@@ -77,7 +83,7 @@ func TestBasic(t *testing.T) {
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, bctx, err := newPackageEx(b, bar, fset)
+	_, bctx, err := newPackageEx(b, bar, fset, true)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}
@@ -116,7 +122,7 @@ func TestBasic(t *testing.T) {
 
 // -----------------------------------------------------------------------------
 
-var fsTestBasic2 = asttest.NewSingleFileFS("/foo", "bar.gop", `
+var fsTestBasic2 = asttest.NewSingleFileFS("/foo", "bar.go", `
 	arr := [...]float64{1, 2}
 	slice := make([]float64, 0, 32)
 	title := "Hello,world!2020-05-27"
@@ -134,7 +140,7 @@ func TestBasic2(t *testing.T) {
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, noExecCtx, err := newPackage(b, bar, fset)
+	_, noExecCtx, err := newPackage(b, bar, fset, true)
 	if err != nil || !noExecCtx {
 		t.Fatal("Compile failed:", err)
 	}
@@ -153,11 +159,10 @@ func TestBasic2(t *testing.T) {
 
 // -----------------------------------------------------------------------------
 
-var fsTestMainPkgNoMain = asttest.NewSingleFileFS("/foo", "bar.gop", `
-package main
+var fsTestMainPkgNoMain = asttest.NewSingleFileFS("/foo", "bar.go", `package main
 
 func ReverseMap(m map[string]int) map[int]string {
-    return {v: k for k, v <- m}
+    return map[int]string{}
 }
 `)
 
@@ -178,82 +183,7 @@ func TestMainPkgNoMain(t *testing.T) {
 
 // -----------------------------------------------------------------------------
 
-var fsTestPkg = asttest.NewSingleFileFS("/foo", "bar.gop", `
-package foo
-
-func ReverseMap(m map[string]int) map[int]string {
-    return {v: k for k, v <- m}
-}
-`)
-
-func TestPkg(t *testing.T) {
-	fset := token.NewFileSet()
-	pkgs, err := parser.ParseFSDir(fset, fsTestPkg, "/foo", nil, 0)
-	if err != nil || len(pkgs) != 1 {
-		t.Fatal("ParseFSDir failed:", err, len(pkgs))
-	}
-
-	bar := pkgs["foo"]
-	b := exec.NewBuilder(nil)
-	_, err = NewPackage(b.Interface(), bar, fset, PkgActClMain)
-	if err != ErrNotAMainPackage {
-		t.Fatal("NewPackage failed:", err)
-	}
-	pkg, err := NewPackage(b.Interface(), bar, fset, PkgActNone)
-	if err != nil {
-		t.Fatal("Compile failed:", err)
-	}
-
-	kind, sym, ok := pkg.Find("ReverseMap")
-	if !ok {
-		t.Fatal("pkg.Find failed: ReverseMap not found")
-	}
-	if kind != SymFunc {
-		t.Fatal("pkg.Find failed: kind != SymFunc")
-	}
-
-	f := sym.(*FuncDecl).Compile()
-	code := b.Resolve()
-
-	ctx := exec.NewContext(code)
-	ctx.Push(map[string]int{"Hi": 1, "Hello": 2})
-	ctx.Call(f)
-	if v := ctx.Get(-1); !reflect.DeepEqual(v, map[int]string{1: "Hi", 2: "Hello"}) {
-		t.Fatal("ReverseMap failed: ret =", v)
-	}
-}
-
-func TestPkg2(t *testing.T) {
-	fset := token.NewFileSet()
-	pkgs, err := parser.ParseFSDir(fset, fsTestPkg, "/foo", nil, 0)
-	if err != nil || len(pkgs) != 1 {
-		t.Fatal("ParseFSDir failed:", err, len(pkgs))
-	}
-
-	bar := pkgs["foo"]
-	b := exec.NewBuilder(nil)
-	pkg, err := NewPackage(b.Interface(), bar, fset, PkgActClAll)
-	if err != nil {
-		t.Fatal("Compile failed:", err)
-	}
-	code := b.Resolve()
-
-	kind, sym, ok := pkg.Find("ReverseMap")
-	if !ok || kind != SymFunc {
-		t.Fatal("pkg.Find failed: ReverseMap func not found")
-	}
-	f := sym.(*FuncDecl).Get()
-	ctx := exec.NewContext(code)
-	ctx.Push(map[string]int{"Hi": 1, "Hello": 2})
-	ctx.Call(f)
-	if v := ctx.Get(-1); !reflect.DeepEqual(v, map[int]string{1: "Hi", 2: "Hello"}) {
-		t.Fatal("ReverseMap failed: ret =", v)
-	}
-}
-
-// -----------------------------------------------------------------------------
-
-var fsTestType = asttest.NewSingleFileFS("/foo", "bar.gop", `
+var fsTestType = asttest.NewSingleFileFS("/foo", "bar.go", `
 println(struct {
 	A int
 	B string

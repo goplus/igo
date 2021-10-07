@@ -167,7 +167,7 @@ func NewPackageEx(out exec.Builder, pkg *ast.Package, fset *token.FileSet, act P
 	ctxPkg := newPkgCtx(out, pkg, fset)
 	ctx := newGblBlockCtx(ctxPkg)
 	for _, f := range pkg.Files {
-		loadFile(ctx, f, imports)
+		loadFile(ctx, f, imports, f.Package == 0) // TODO: noEntrypoint = !PackagePos
 	}
 	switch act {
 	case PkgActClAll:
@@ -242,16 +242,17 @@ func (p *Package) Find(name string) (kind SymKind, v interface{}, ok bool) {
 	return
 }
 
-func loadFile(ctx *blockCtx, f *ast.File, imports map[string]string) {
+func loadFile(ctx *blockCtx, f *ast.File, imports map[string]string, noEntrypoint bool) {
 	file := newFileCtx(ctx)
+	last := len(f.Decls) - 1
 	ctx.file = file
 	for name, pkg := range imports {
 		ctx.file.imports[name] = pkg
 	}
-	for _, decl := range f.Decls {
+	for i, decl := range f.Decls {
 		switch d := decl.(type) {
 		case *ast.FuncDecl:
-			loadFunc(ctx, d)
+			loadFunc(ctx, d, noEntrypoint && i == last)
 		case *ast.GenDecl:
 			switch d.Tok {
 			case token.IMPORT:
@@ -406,8 +407,7 @@ func loadVar(ctx *blockCtx, name string, typ ast.Expr, value ast.Expr) {
 	}
 }
 
-func loadFunc(ctx *blockCtx, d *ast.FuncDecl) {
-	const isUnnamed = false
+func loadFunc(ctx *blockCtx, d *ast.FuncDecl, isUnnamed bool) {
 	var name = d.Name.Name
 	if d.Recv != nil {
 		recv := astutil.ToRecv(d.Recv)

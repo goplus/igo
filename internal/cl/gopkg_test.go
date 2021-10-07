@@ -101,7 +101,7 @@ import (
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, _, err = newPackage(b, bar, fset)
+	_, _, err = newPackage(b, bar, fset, false)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}
@@ -190,7 +190,7 @@ import (
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, _, err = newPackage(b, bar, fset)
+	_, _, err = newPackage(b, bar, fset, false)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}
@@ -279,7 +279,7 @@ import (
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, _, err = newPackage(b, bar, fset)
+	_, _, err = newPackage(b, bar, fset, false)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}
@@ -351,7 +351,7 @@ import (
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, _, err = newPackage(b, bar, fset)
+	_, _, err = newPackage(b, bar, fset, false)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}
@@ -417,7 +417,7 @@ import (
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, _, err = newPackage(b, bar, fset)
+	_, _, err = newPackage(b, bar, fset, false)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}
@@ -486,7 +486,7 @@ import (
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, _, err = newPackage(b, bar, fset)
+	_, _, err = newPackage(b, bar, fset, false)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}
@@ -668,7 +668,7 @@ import (
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, _, err = newPackage(b, bar, fset)
+	_, _, err = newPackage(b, bar, fset, false)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}
@@ -728,7 +728,7 @@ func TestPkgType(t *testing.T) {
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, _, err = newPackage(b, bar, fset)
+	_, _, err = newPackage(b, bar, fset, false)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}
@@ -806,7 +806,7 @@ func TestPkgTakeAddr(t *testing.T) {
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, _, err = newPackage(b, bar, fset)
+	_, _, err = newPackage(b, bar, fset, false)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}
@@ -893,7 +893,7 @@ pkg.MakeRect(10,20,100,200).Min.X = 10
 
 	bar := pkgs["main"]
 	b := exec.NewBuilder(nil)
-	_, _, err = newPackage(b, bar, fset)
+	_, _, err = newPackage(b, bar, fset, false)
 	if err != nil {
 		t.Fatal("Compile failed:", err)
 	}

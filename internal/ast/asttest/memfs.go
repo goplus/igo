@@ -17,8 +17,14 @@
 package asttest
 
 import (
+	"bytes"
+	"fmt"
+	"go/parser"
+	"go/scanner"
+	"go/token"
 	"os"
 	"path"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -99,12 +105,32 @@ func (p *MemFS) Join(elem ...string) string {
 
 // -----------------------------------------------------------------------------
 
+func adjustCode(code string) string {
+	fsetTmp := token.NewFileSet()
+	_, err := parser.ParseFile(fsetTmp, "foo.go", code, 0)
+	if err != nil {
+		if errlist, ok := err.(scanner.ErrorList); ok {
+			if e := errlist[0]; strings.HasPrefix(e.Msg, "expected declaration") {
+				idx := e.Pos.Offset
+				const entrypoint = "func main()"
+				var b bytes.Buffer
+				fmt.Fprintf(&b, "%s %s{%s\n}", code[:idx], entrypoint, code[idx:])
+				return b.String()
+			}
+		}
+	}
+	return code
+}
+
 // NewSingleFileFS creates a file system that only contains a single file.
 func NewSingleFileFS(dir string, fname string, data string) *MemFS {
+	if !strings.HasPrefix(data, "package ") {
+		data = "package main;" + data
+	}
 	return NewMemFS(map[string][]string{
 		dir: {fname},
 	}, map[string]string{
-		path.Join(dir, fname): data,
+		path.Join(dir, fname): adjustCode(data),
 	})
 }
 
