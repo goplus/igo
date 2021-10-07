@@ -69,9 +69,9 @@ type Exporter struct {
 
 // NewExporter creates a go package exporter.
 func NewExporter(w io.Writer, pkg *types.Package) *Exporter {
-	const gopPath = "github.com/goplus/gop"
-	imports := map[string]string{gopPath: "gop"}
-	importPkgs := map[string]string{"gop": gopPath}
+	const igoPath = "github.com/goplus/igo"
+	imports := map[string]string{igoPath: "igo"}
+	importPkgs := map[string]string{"igo": igoPath}
 	p := &Exporter{w: w, pkg: pkg, imports: imports, importPkgs: importPkgs}
 	p.pkgDot = p.importPkg(pkg) + "."
 	return p
@@ -203,7 +203,7 @@ func %s(args []interface{}) []%v {
 func (p *Exporter) sliceCast(varg string, tyElem types.Type) string {
 	if e, ok := tyElem.(*types.Basic); ok {
 		uName := strings.Title(e.Name())
-		varg = "gop.To" + uName + "s(" + varg + ")"
+		varg = "igo.To" + uName + "s(" + varg + ")"
 	} else {
 		tyElemIntf, isInterface := tyElem.Underlying().(*types.Interface)
 		if !(isInterface && tyElemIntf.Empty()) { // is not empty interface
@@ -347,7 +347,7 @@ func (p *Exporter) ExportFunc(fn *types.Func) error {
 		"$fn", fnName,
 	)
 	p.execs = append(p.execs, repl.Replace(`
-func $execFunc($ariName int, p *gop.Context) {
+func $execFunc($ariName int, p *igo.Context) {
 $argInit	$retAssign$fn($args)
 	p.$retReturn
 }
@@ -377,7 +377,7 @@ func (p *Exporter) ExportType(typ *types.TypeName) {
 }
 
 var (
-	qspecPkg   = types.NewPackage("github.com/goplus/gop/exec.spec", "qspec")
+	qspecPkg   = types.NewPackage("github.com/goplus/igo/exec.spec", "qspec")
 	reflectPkg = types.NewPackage("reflect", "reflect")
 )
 
@@ -533,7 +533,7 @@ func registerConsts(w io.Writer, consts []exportedConst) {
 
 const gopkgInitExportHeader = `
 // I is a Go package instance.
-var I = gop.NewGoPackage("%s")
+var I = igo.NewGoPackage("%s")
 
 func init() {
 `
@@ -541,7 +541,7 @@ func init() {
 const gopkgInitExportFooter = `}
 `
 
-const gopkgExportHeader = `// Package %s provide Go+ "%s" package, as "%s" package in Go.
+const gopkgExportHeader = `// Package %s provide iGo "%s" package, as "%s" package in Go.
 package %s
 
 import (

@@ -37,6 +37,24 @@ func NewGoPackage(pkgPath string) *GoPackage {
 	return exec.NewGoPackage(pkgPath)
 }
 
+// ToInts converts []interface{} into []int.
+func ToInts(args []interface{}) []int {
+	ret := make([]int, len(args))
+	for i, arg := range args {
+		ret[i] = arg.(int)
+	}
+	return ret
+}
+
+// ToFloat64s converts []interface{} into []float64.
+func ToFloat64s(args []interface{}) []float64 {
+	ret := make([]float64, len(args))
+	for i, arg := range args {
+		ret[i] = arg.(float64)
+	}
+	return ret
+}
+
 // ToBools converts []interface{} into []bool.
 func ToBools(args []interface{}) []bool {
 	ret := make([]bool, len(args))
