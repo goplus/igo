@@ -16,12 +16,13 @@
 
 package bytecode_test
 
+/*
 import (
 	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/goplus/igo/cl/cltest"
+	"github.com/goplus/igo/internal/cl/cltest"
 )
 
 // -----------------------------------------------------------------------------
@@ -45,5 +46,5 @@ func TestFromTestdata2(t *testing.T) {
 	dir = filepath.Join(dir, "../golang/testdata2")
 	cltest.FromTestdata(t, dir, sel, exclude)
 }
-
+*/
 // -----------------------------------------------------------------------------
