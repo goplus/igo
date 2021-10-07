@@ -262,7 +262,7 @@ func toIdentType(ctx *blockCtx, ident string) iType {
 	}
 	typ, err := ctx.findType(ident)
 	if err != nil {
-		log.Panicln("toIdentType failed: findType error", err)
+		log.Panicf("findType `%s` error: %v\n", ident, err)
 		return nil
 	}
 	return typ.Type

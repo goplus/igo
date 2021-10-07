@@ -262,7 +262,7 @@ func loadFile(ctx *blockCtx, f *ast.File, imports map[string]string, noEntrypoin
 			case token.CONST:
 				loadConsts(ctx, d)
 			case token.VAR:
-				compileStmt(ctx, &ast.DeclStmt{decl})
+				compileStmt(ctx, &ast.DeclStmt{Decl: decl})
 			default:
 				log.Panicln("tok:", d.Tok, "spec:", reflect.TypeOf(d.Specs).Elem())
 			}
