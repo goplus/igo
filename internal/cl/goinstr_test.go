@@ -1,5 +1,6 @@
 package cl
 
+/*
 import (
 	"go/ast"
 	"go/token"
@@ -36,5 +37,5 @@ func TestDeferFileNotFound(t *testing.T) {
 		"pkgCtx.getCodeInfo failed: file not found - \n",
 	)
 }
-
+*/
 // -----------------------------------------------------------------------------

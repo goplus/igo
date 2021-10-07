@@ -221,6 +221,7 @@ func TestFuncv(t *testing.T) {
 
 // -----------------------------------------------------------------------------
 
+/*
 var testClosure = `
 	import "fmt"
 
@@ -243,20 +244,20 @@ var testMethodClosure = `
 	type M struct {
 		Sym string
 	}
-	
+
 	func (m *M) Test(prompt string) (n int, err error) {
 		n, err = fmt.Println(prompt + m.Sym + x)
 		return
 	}
-	
+
 	func (m *M) Test2(int) {
 		fmt.Println(m.Sym)
 	}
-	
+
 	func (m *M) Test3(s string,n ...int) {
 		fmt.Println(m.Sym,s,n)
 	}
-	
+
 	m := &M{"#"}
 	foo := m.Test
 	foo2 := m.Test2
@@ -271,6 +272,7 @@ var testMethodClosure = `
 func TestMethodClosure(t *testing.T) {
 	cltest.Expect(t, testMethodClosure, "x: #Hello, world!\n#\n# a [100 200]\n")
 }
+*/
 
 var testGopkgClosure = `
 	import (
@@ -316,50 +318,50 @@ func TestClosurev(t *testing.T) {
 
 var testForRangeClauses = map[string]testData{
 	"no_kv_range_list": {`sum:=0
-					for range [1,3,5,7] {
+					for range []int{1,3,5,7}{
 						sum++
 					}
 					println(sum)
 					`, "4\n", false},
 	"no_kv_range_map": {`sum:=0
-					for range {1:1,2:2,3:3} {
+					for range map[int]int{1:1,2:2,3:3} {
 						sum++
 					}
 					println(sum)
 					`, "3\n", false},
 	"only_k_range_list": {`sum:=0
-					for k :=range [1,3,5,7]{
+					for k :=range []int{1,3,5,7}{
 						sum+=k
 					}
 					println(sum)
 					`, "6\n", false},
 	"only_k_range_map": {`sum:=0
-					for k :=range {1:1,2:4,3:8,4:16}{
+					for k :=range map[int]int{1:1,2:4,3:8,4:16}{
 						sum+=k
 					}
 					println(sum)
 					`, "10\n", false},
 	"only_v_range_list": {`sum:=0
-					for _,v :=range [1,3,5,7]{
+					for _,v :=range []int{1,3,5,7}{
 						sum+=v
 					}
 					println(sum)
 					`, "16\n", false},
 	"only_v_range_map": {`sum:=0
-					for _,v :=range {1:1,2:4,3:8,4:16}{
+					for _,v :=range map[int]int{1:1,2:4,3:8,4:16}{
 						sum+=v
 					}
 					println(sum)
 					`, "29\n", false},
 	"both_kv_range_list": {`sum:=0
-					for k,v:=range [1,3,5,7]{
+					for k,v:=range []int{1,3,5,7}{
 						// 0*1+1*3+2*5+3*7
 						sum+=k*v
 					}
 					println(sum)
 					`, "34\n", false},
 	"both_kv_range_map": {`sum:=0
-					m:={1:2,2:4,3:8}
+					m:=map[int]int{1:2,2:4,3:8}
 					for k,v:=range m {
 						//1*2+2*4+3*8=34
 						sum+=k*v
@@ -368,7 +370,7 @@ var testForRangeClauses = map[string]testData{
 					`, "34\n", false},
 	"both_kv_assign_simple_range": {` sum:=0
 					k,v:=0,0
-					for k,v=range [1,2,3,4,5]{
+					for k,v=range []int{1,2,3,4,5}{
 						sum+=k+v
 					}
 					println(k)
@@ -376,8 +378,8 @@ var testForRangeClauses = map[string]testData{
 					println(sum)
 					`, "4\n5\n25\n", false},
 	"both_kv_assign_range_list": {` sum:=0
-					m:={1:2,2:4,3:8}
-					arr:=[11,22]
+					m:=map[int]int{1:2,2:4,3:8}
+					arr:=[]int{11,22}
 					for m[1],m[2]=range arr{
 					    sum+=m[1]+m[2]
 					}
@@ -386,8 +388,8 @@ var testForRangeClauses = map[string]testData{
 					println(sum)
 					`, "1\n22\n34\n", false},
 	"both_kv_assign_range_map": {` sum:=0
-					m:={3:8}
-					arr:=[11,22]
+					m:=map[int]int{3:8}
+					arr:=[]int{11,22}
 					for arr[0],arr[1]=range m{
 					    sum+=arr[0]+arr[1]
 					}
@@ -396,8 +398,8 @@ var testForRangeClauses = map[string]testData{
 					println(sum)
 					`, "3\n8\n11\n", false},
 	"only_v_assign_range": {` sum:=0
-					m:={3:8}
-					arr:=[11,22]
+					m:=map[int]int{3:8}
+					arr:=[]int{11,22}
 					for _,arr[1]=range m{
 					    sum+=arr[0]+arr[1]
 					}
@@ -406,8 +408,8 @@ var testForRangeClauses = map[string]testData{
 					println(sum)
 					`, "11\n8\n19\n", false},
 	"only_k_assign_range": {` sum:=0
-					m:={3:8}
-					arr:=[11,22]
+					m:=map[int]int{3:8}
+					arr:=[]int{11,22}
 					for arr[0],_=range m{
 					    sum+=arr[0]+arr[1]
 					}
@@ -416,8 +418,8 @@ var testForRangeClauses = map[string]testData{
 					println(sum)
 					`, "3\n22\n25\n", false},
 	"none_kv_assign_range": {` sum:=0
-					m:={3:8}
-					arr:=[11,22]
+					m:=map[int]int{3:8}
+					arr:=[]int{11,22}
 					for _,_=range m{
 					    sum+=arr[0]+arr[1]
 					}
@@ -435,7 +437,7 @@ func TestRangeStmt(t *testing.T) {
 
 var testRangeStmt2 = `
 	sum := 0
-	for _, x := range [1, 3, 5, 7, 11, 13, 17] {
+	for _, x := range []int{1, 3, 5, 7, 11, 13, 17} {
 		if x > 3 {
 			sum += x
 		}
@@ -471,7 +473,7 @@ func _TestForStmt(t *testing.T) {
 var testNormalForClauses = map[string]testData{
 	"for_with_init_cond_post": {`
 					sum := 0
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					for i := 0; i < len(arr); i++ {
 						sum+=arr[i]
 					}
@@ -479,7 +481,7 @@ var testNormalForClauses = map[string]testData{
 					`, "16\n", false},
 	"for_with_cond_post": {`
 					sum := 0
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					i := 0
 					for ; i < len(arr); i+=2 {
 						sum+=arr[i]
@@ -487,7 +489,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "6\n", false},
 	"for_with_cond": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					i := 0
 					sum := 0
 					for ; i < len(arr) && i < 2; {
@@ -507,7 +509,7 @@ var testNormalForClauses = map[string]testData{
 					}
 					`, "without_cond\nwithout_cond\n", false},
 	"for_with_init_cond": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					for i:=0; i < len(arr); {
 						sum+=arr[i]
@@ -516,7 +518,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "16\n", false},
 	"for_with_continue": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					for i:=0; i < len(arr);i++ {
 						if arr[i]<5{
@@ -527,7 +529,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "12\n", false},
 	"for_with_break": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					for i:=0; i < len(arr);i++ {
 						if arr[i]>5{
@@ -538,7 +540,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "9\n", false},
 	"for_with_break_label": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					L:
 					for i:=0; i < len(arr);i++ {
@@ -552,7 +554,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "12\n", false}, // (1+1)+(1+3)+(1+5)
 	"for_with_continue_label": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					L:
 					for i:=0; i < len(arr);i++ {
@@ -566,7 +568,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "48\n", false}, // (1+3+5+7)*2+(1+3)*4
 	"for_with_continue_break": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					for i:=0; i < len(arr);i++ {
 						if arr[i]>5{
@@ -582,7 +584,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "36\n", false},
 	"for_with_continue_break_continue": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					L1:
 					for i:=0; i < len(arr);i++ {
@@ -599,7 +601,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "12\n", false},
 	"for_with_continue_panic": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					for i:=0; i < len(arr);i++ {
 					}
@@ -607,7 +609,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "", true},
 	"for_with_continue_no_label_panic": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					for i:=0; i < len(arr);i++ {
 						continue L
@@ -615,7 +617,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "", true},
 	"for_with_break_panic": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					for i:=0; i < len(arr);i++ {
 					}
@@ -623,7 +625,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "", true},
 	"for_with_break_label_panic": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					L:
 					sum := 0
 					for i:=0; i < len(arr);i++ {
@@ -632,7 +634,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "", true},
 	"for_with_continue_wrong_label_panic": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					L:
 					sum := 0
 					for i:=0; i < len(arr);i++ {
@@ -641,7 +643,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "", true},
 	"for_with_many_labels": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					L:
 					for i:=0; i < len(arr);i++ {
@@ -659,7 +661,7 @@ var testNormalForClauses = map[string]testData{
 					println(sum)
 					`, "8\n", false},
 	"for_with_many_labels_break": {`
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					L:
 					for i:=0; i < len(arr);i++ {
@@ -952,7 +954,7 @@ func TestGotoLabelStmt(t *testing.T) {
 
 var testRangeStmtWithBranchClauses = map[string]testData{
 	"range_with_continue": {clause: `
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					for i,_:=range arr {
 						if arr[i]<5{
@@ -963,7 +965,7 @@ var testRangeStmtWithBranchClauses = map[string]testData{
 					println(sum)
 					`, want: "12\n"},
 	"range_with_break": {clause: `
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					for i,_:=range arr {
 						if arr[i]>5{
@@ -975,7 +977,7 @@ var testRangeStmtWithBranchClauses = map[string]testData{
 					`, want: "9\n"},
 
 	"range_with_continue_break": {clause: `
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					for i,_:=range arr {
 						if arr[i]>5{
@@ -990,36 +992,6 @@ var testRangeStmtWithBranchClauses = map[string]testData{
 					}
 					println(sum)
 					`, want: "36\n"},
-	"range_with_return_value": {clause: `
-					func foo() int{
-						arr := [1,2,3,4]
-						sum := 0
-						for i, _ <- arr {
-							if arr[i]>0{
-								return 1
-							}
-							sum+=arr[i]
-						}
-						return 0
-					}
-					println(foo())
-					`, want: "1\n"},
-	"range_with_only_return": {clause: `
-					func foo() {
-						arr := [1,2,3,4]
-						sum := 0
-						for i, _ <- arr {
-							if arr[i]>0{
-								println("1")
-								return 
-							}
-							sum+=arr[i]
-						}
-						println("0")
-						return 
-					}
-					foo()
-					`, want: "1\n"},
 }
 
 func TestRangeStmtWithBranch(t *testing.T) {
@@ -1028,88 +1000,11 @@ func TestRangeStmtWithBranch(t *testing.T) {
 
 // -----------------------------------------------------------------------------
 
-var testForPhraseWithBranchClauses = map[string]testData{
-	"for_phrase_with_continue": {clause: `
-					arr := [1,3,5,7]
-					sum := 0
-					for i, _ <- arr {
-						if arr[i]<5{
-							continue
-						}
-						sum+=arr[i]
-					}
-					println(sum)
-					`, want: "12\n"},
-	"for_phrase_with_break": {clause: `
-					arr := [1,3,5,7]
-					sum := 0
-					for i, _ <- arr {
-						if arr[i]>5{
-							break
-						}
-						sum+=arr[i]
-					}
-					println(sum)
-					`, want: "9\n"},
-	"for_phrase_with_continue_break": {clause: `
-					arr := [1,3,5,7]
-					sum := 0
-					for i, _ <- arr {
-						if arr[i]>5{
-							break
-						}
-						for j:=0;j<len(arr);j++{
-							if arr[j]<5{
-								continue
-							}
-							sum+=arr[j]
-						}
-					}
-					println(sum)
-					`, want: "36\n"},
-	"for_phrase_with_return_value": {clause: `
-					func foo() int{
-						arr := [1,2,3,4]
-						sum := 0
-						for i, _ <- arr {
-							if arr[i]>0{
-								return 1
-							}
-							sum+=arr[i]
-						}
-						return 0
-					}
-					println(foo())
-					`, want: "1\n"},
-	"for_phrase_with_only_return": {clause: `
-					func foo() {
-						arr := [1,2,3,4]
-						sum := 0
-						for i, _ <- arr {
-							if arr[i]>0{
-								println("1")
-								return 
-							}
-							sum+=arr[i]
-						}
-						println("0")
-						return 
-					}
-					foo()
-					`, want: "1\n"},
-}
-
-func TestForPhraseWithBranch(t *testing.T) {
-	testScripts(t, "TestForPhraseWithBranch", testForPhraseWithBranchClauses)
-}
-
-// -----------------------------------------------------------------------------
-
 var testRangeMapWithBranchClauses = map[string]testData{
 	"map_for_with_continue": {clause: `
-					arr := {1:1,2:3,3:5,4:7}
+					arr := map[int]int{1:1,2:3,3:5,4:7}
 					sum := 0
-					for i, _ <- arr {
+					for i, _ := range arr {
 						if arr[i]<5{
 							continue
 						}
@@ -1118,9 +1013,9 @@ var testRangeMapWithBranchClauses = map[string]testData{
 					println(sum)
 					`, want: "12\n"},
 	"map_for_with_break": {clause: `
-					arr := {1:1,2:3,3:5,4:7}
+					arr := map[int]int{1:1,2:3,3:5,4:7}
 					sum := 0
-					for i, _ <- arr {
+					for i, _ := range arr {
 						if arr[i]>0{
 							break
 						}
@@ -1130,9 +1025,9 @@ var testRangeMapWithBranchClauses = map[string]testData{
 					`, want: "0\n"},
 
 	"map_for_range_continue": {clause: `
-					arr := {1:1,2:3,3:5,4:7}
+					arr := map[int]int{1:1,2:3,3:5,4:7}
 					sum := 0
-					for i, _ <- arr {
+					for i, _ := range arr {
 						if arr[i]<5{
 							continue
 						}
@@ -1141,9 +1036,9 @@ var testRangeMapWithBranchClauses = map[string]testData{
 					println(sum)
 					`, want: "12\n"},
 	"map_for_range_break": {clause: `
-					arr := {1:1,2:3,3:5,4:7}
+					arr := map[int]int{1:1,2:3,3:5,4:7}
 					sum := 0
-					for i, _ <- arr {
+					for i, _ := range arr {
 						if arr[i]>0{
 							break
 						}
@@ -1153,9 +1048,9 @@ var testRangeMapWithBranchClauses = map[string]testData{
 					`, want: "0\n"},
 	"map_for_range_return_value": {clause: `
 					func foo() int{
-						arr := {1:1,2:3,3:5,4:7}
+						arr := map[int]int{1:1,2:3,3:5,4:7}
 						sum := 0
-						for i, _ <- arr {
+						for i, _ := range arr {
 							if arr[i]>0{
 								return 1
 							}
@@ -1167,9 +1062,9 @@ var testRangeMapWithBranchClauses = map[string]testData{
 					`, want: "1\n"},
 	"map_for_range_only_return": {clause: `
 					func foo() {
-						arr := {1:1,2:3,3:5,4:7}
+						arr := map[int]int{1:1,2:3,3:5,4:7}
 						sum := 0
-						for i, _ <- arr {
+						for i, _ := range arr {
 							if arr[i]>0{
 								println("1")
 								return 
@@ -1292,8 +1187,8 @@ func TestDeferStmt(t *testing.T) {
 
 func TestDeferCopy(t *testing.T) {
 	cltest.Expect(t, `
-		a := [1, 2, 3]
-		b := [4, 5, 6]
+		a := []int{1, 2, 3}
+		b := []int{4, 5, 6}
 		defer func() {
 			println(b)
 		}()
@@ -1421,7 +1316,8 @@ func _TestDefer7(t *testing.T) {
 
 // -----------------------------------------------------------------------------
 
-func TestGo(t *testing.T) {
+// TODO: to be tested
+func _TestGo(t *testing.T) {
 	cltest.Expect(t, `
 		import "time"
 
@@ -1466,10 +1362,10 @@ func TestVarScopeStmt(t *testing.T) {
 
 var testRangeLabelBranchClauses = map[string]testData{
 	"for_range_with_label_branch": {clause: `
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					L:
-					for i, _ <- arr {
+					for i, _ := range arr {
 						if arr[i]<5{
 							continue L
 						}
@@ -1481,10 +1377,10 @@ var testRangeLabelBranchClauses = map[string]testData{
 					println(sum)
 					`, want: "5\n"},
 	"for_range_with_nested_labels": {clause: `
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					L:
-					for i, _ <- arr {
+					for i, _ := range arr {
 						if arr[i]<5{
 							continue L
 						}
@@ -1506,10 +1402,10 @@ var testRangeLabelBranchClauses = map[string]testData{
 					println(sum)
 					`, want: "10\n"},
 	"for_range_with_nested_labels_continue": {clause: `
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					L:
-					for i, _ <- arr {
+					for i, _ := range arr {
 						if arr[i]<5{
 							continue L
 						}
@@ -1528,10 +1424,10 @@ var testRangeLabelBranchClauses = map[string]testData{
 					println(sum)
 					`, want: "5\n"},
 	"for_range_with_nested_labels_break": {clause: `
-					arr := [1,3,5,7]
+					arr := []int{1,3,5,7}
 					sum := 0
 					L:
-					for i, _ <- arr {
+					for i, _ := range arr {
 						sum+=arr[i]
 						M:
 						for j,_ :=range arr{
@@ -1545,11 +1441,11 @@ var testRangeLabelBranchClauses = map[string]testData{
 					`, want: "1\n"},
 	"for_range_with_nested_labels_continue_break": {clause: `
 					L:
-					for k,v:=range [1,2]{
+					for k,v:=range []int{1,2}{
 					M:
-						for t,w:=range [3,4]{
+						for t,w:=range []int{3,4}{
 					K:
-							for l,m:=range[5,6]{
+							for l,m:=range[]int{5,6}{
 								println(k,v,t,w,l,m)
 								if m==5{
 									continue M
@@ -1566,9 +1462,7 @@ func TestRangeBranchStmt(t *testing.T) {
 }
 
 var testBranchGotoClauses = map[string]testData{
-	"break_between_normal_for_and_range_1": {`
-					package main
-					
+	"break_between_normal_for_and_range_1": {`					
 					func main() {
 						arr := []int{1, 2, 3}
 						arr2 := []int{4, 5, 6}
@@ -1590,9 +1484,7 @@ var testBranchGotoClauses = map[string]testData{
 						}
 					}
 					`, "0 1 0 4\n0 1 1 5\n1 2 0 4\n1 2 1 5\n2 3 0 4\n2 3 1 5\n", false},
-	"break_between_normal_for_and_range_2": {`
-					package main
-					
+	"break_between_normal_for_and_range_2": {`					
 					func main() {
 						arr := []int{1, 2, 3}
 						arr2 := []int{4, 5, 6}
@@ -1614,9 +1506,7 @@ var testBranchGotoClauses = map[string]testData{
 						}
 					}
 					`, "0 1 0 4\n0 1 1 5\n1 2 0 4\n1 2 1 5\n2 3 0 4\n2 3 1 5\n", false},
-	"break_between_normal_for_and_range_3": {`
-					package main
-					
+	"break_between_normal_for_and_range_3": {`					
 					func main() {
 						arr := []int{1, 2, 3}
 						arr2 := []int{4, 5, 6}
@@ -1634,8 +1524,6 @@ var testBranchGotoClauses = map[string]testData{
 					}
 					`, "0 1 0 4\n0 1 1 5\n0 1 2 6\n", false},
 	"break_between_normal_for_and_range_4": {`
-					package main
-					
 					func main() {
 						arr := []int{1, 2, 3}
 						for _, i := range arr {
@@ -1652,8 +1540,8 @@ var testBranchGotoClauses = map[string]testData{
 					}
 					`, "1\ncase 1\n2\ndefault 2\nhello,there\n3\ndefault 3\nhello,there\n", false},
 	"break_between_normal_for_and_goto1": {`
-					for i <- [1, 2] {
-						for j <- [3, 4] {
+					for _, i := range []int{1, 2} {
+						for _, j := range []int{3, 4} {
 							println(i, j)
 							goto L
 						}
@@ -1661,8 +1549,8 @@ var testBranchGotoClauses = map[string]testData{
 					L:
 					`, "1 3\n", false},
 	"break_between_normal_for_and_goto2": {`
-					for i <- [1, 2] {
-						for j <- [3, 4] {
+					for _, i := range []int{1, 2} {
+						for _, j := range []int{3, 4} {
 							goto M
 						M:
 							println(i, j)
@@ -1672,8 +1560,8 @@ var testBranchGotoClauses = map[string]testData{
 					L:
 					`, "1 3\n", false},
 	"break_between_normal_for_and_goto3": {`
-					for i <- [1, 2] {
-						for j <- [3, 4] {
+					for _, i := range []int{1, 2} {
+						for _, j := range []int{3, 4} {
 							if i == 1 {
 								goto M
 							}
@@ -1690,8 +1578,8 @@ var testBranchGotoClauses = map[string]testData{
 	"break_between_normal_for_and_goto4": {`
 cnt := 0
 					L:
-						for i <- [1, 2] {
-							for j <- [3, 4] {
+						for _, i := range []int{1, 2} {
+							for _, j := range []int{3, 4} {
 								if cnt <= 2 {
 									println(cnt, i, j)
 									cnt++

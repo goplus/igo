@@ -16,6 +16,7 @@
 
 package cl
 
+/*
 import (
 	"fmt"
 	"go/token"
@@ -903,3 +904,4 @@ pkg.MakeRect(10,20,100,200).Min.X = 10
 	ctx := exec.NewContext(code)
 	ctx.Exec(0, code.Len())
 }
+*/
