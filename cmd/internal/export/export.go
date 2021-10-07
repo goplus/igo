@@ -42,7 +42,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&flagExportDir, "outdir", "", "optional set export lib path, default is $GoPlusRoot/lib path")
+	flag.StringVar(&flagExportDir, "outdir", "", "optional set export lib path, default is $iGoRoot/lib path")
 }
 
 // -----------------------------------------------------------------------------
@@ -50,7 +50,7 @@ func init() {
 // Cmd - igo go
 var Cmd = &base.Command{
 	UsageLine: "igo export [-outdir <outRootDir>] [packages]",
-	Short:     "Export Go packages for Go+ programs",
+	Short:     "Export Go packages for iGo",
 }
 
 func init() {
@@ -79,9 +79,9 @@ func runCmd(cmd *base.Command, args []string) {
 	if flagExportDir != "" {
 		libDir = flagExportDir
 	} else {
-		root, err := gopkg.GoPlusRoot()
+		root, err := gopkg.IgoRoot()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "find goplus root failed:", err)
+			fmt.Fprintln(os.Stderr, "find iGo root failed:", err)
 			os.Exit(-1)
 		}
 		libDir = filepath.Join(root, "lib")

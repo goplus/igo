@@ -104,21 +104,21 @@ func findLastVerPkg(pkgDirBase string, name string) (verName string) {
 const (
 	pkgStandard = 0
 	pkgExternal = 1
-	pkgGoplus   = 2
+	pkgIgo      = 2
 )
 
 const (
 	github    = "github.com/"
-	goplus    = "goplus/gop"
+	igo       = "goplus/igo"
 	githubLen = len(github)
-	pkgGopLen = len(goplus) + githubLen
+	pkgIgoLen = len(igo) + githubLen
 )
 
 func getPkgKind(pkgPath string) int {
 	if strings.HasPrefix(pkgPath, github) {
-		if strings.HasPrefix(pkgPath[githubLen:], goplus) {
-			if len(pkgPath) == pkgGopLen || pkgPath[pkgGopLen] == '/' {
-				return pkgGoplus
+		if strings.HasPrefix(pkgPath[githubLen:], igo) {
+			if len(pkgPath) == pkgIgoLen || pkgPath[pkgIgoLen] == '/' {
+				return pkgIgo
 			}
 		}
 		return pkgExternal
@@ -184,12 +184,12 @@ func Import(pkgPath string) (*types.Package, error) {
 		}
 		fmt.Fprintln(os.Stderr, "export", srcDir)
 		imp = importer.ForCompiler(token.NewFileSet(), "source", nil)
-	case pkgGoplus:
-		goplusRoot, err := GoPlusRoot()
+	case pkgIgo:
+		igoRoot, err := IgoRoot()
 		if err != nil {
 			return nil, err
 		}
-		srcDir = goplusRoot + pkgPath[pkgGopLen:]
+		srcDir = igoRoot + pkgPath[pkgIgoLen:]
 		fmt.Fprintln(os.Stderr, "export", srcDir)
 		imp = importer.ForCompiler(token.NewFileSet(), "source", nil)
 	default:
@@ -264,8 +264,8 @@ func Export(pkgPath string, w io.Writer) (err error) {
 
 // -----------------------------------------------------------------------------
 
-// GoPlusRoot returns Go+ root path.
-func GoPlusRoot() (root string, err error) {
+// IgoRoot returns iGo root path.
+func IgoRoot() (root string, err error) {
 	dir, err := os.Getwd()
 	if err != nil {
 		return
@@ -273,26 +273,26 @@ func GoPlusRoot() (root string, err error) {
 	for {
 		modfile := filepath.Join(dir, "go.mod")
 		if hasFile(modfile) {
-			if isGoplus(modfile) {
+			if isIgo(modfile) {
 				return dir, nil
 			}
-			return "", errors.New("current directory is not under goplus root")
+			return "", errors.New("current directory is not under iGo root")
 		}
 		next := filepath.Dir(dir)
 		if dir == next {
-			return "", errors.New("go.mod not found, please run under goplus root")
+			return "", errors.New("go.mod not found, please run under iGo root")
 		}
 		dir = next
 	}
 }
 
-func isGoplus(modfile string) bool {
+func isIgo(modfile string) bool {
 	b, err := ioutil.ReadFile(modfile)
-	return err == nil && bytes.HasPrefix(b, goplusPrefix)
+	return err == nil && bytes.HasPrefix(b, igoPrefix)
 }
 
 var (
-	goplusPrefix = []byte("module github.com/goplus/gop")
+	igoPrefix = []byte("module github.com/goplus/igo")
 )
 
 func hasFile(path string) bool {

@@ -36,7 +36,7 @@ import (
 // Cmd - igo run
 var Cmd = &base.Command{
 	UsageLine: "igo run [-asm -quiet -debug -prof] <goSrcDir|goSrcFile>",
-	Short:     "Run a Go program",
+	Short:     "iGo - Run a Go program",
 }
 
 var (
