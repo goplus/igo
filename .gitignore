@@ -1,6 +1,7 @@
 .DS_Store
 _gop/
 _reflectx/
+_cmd/
 
 # Binaries for programs and plugins
 *.exe
