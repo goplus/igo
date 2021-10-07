@@ -19,7 +19,7 @@ package cl_test
 import (
 	"testing"
 
-	"github.com/goplus/igo/cl/cltest"
+	"github.com/goplus/igo/internal/cl/cltest"
 )
 
 // -----------------------------------------------------------------------------
@@ -88,7 +88,6 @@ var testSw = `
 		x= 7
 	}
 	println(x)
-
 `
 
 var testSw2 = `
@@ -138,7 +137,7 @@ var testIf2 = `
 	if true {
 		x = 3
 	}
-		println(x)
+	println(x)
 `
 
 func TestIf(t *testing.T) {

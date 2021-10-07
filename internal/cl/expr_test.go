@@ -16,11 +16,10 @@
 package cl_test
 
 import (
-	"fmt"
 	"math/big"
 	"testing"
 
-	"github.com/goplus/gop/cl/cltest"
+	"github.com/goplus/igo/internal/cl/cltest"
 )
 
 // -----------------------------------------------------------------------------
@@ -88,69 +87,6 @@ func TestBadIndex(t *testing.T) {
 }
 
 // -------------------`----------------------------------------------------------
-
-func TestAutoProperty(t *testing.T) {
-	script := `
-		import "io"
-
-		func New() (*Bar, error) {
-			return nil, io.EOF
-		}
-
-		bar, err := New()
-		if err != nil {
-			log.Println(err)
-		}
-	`
-	gopcode := `
-		import (
-			"github.com/goplus/gop/ast/goptest"
-		)
-
-		script := %s
-
-		doc := goptest.New(script)!
-		println(doc.any.funcDecl.name)
-	`
-	cltest.Expect(t,
-		fmt.Sprintf(gopcode, "`"+script+"`"),
-		"[New main]\n",
-	)
-}
-
-func TestAutoProperty2(t *testing.T) {
-	cltest.Expect(t, `
-		import "bytes"
-		import "os"
-
-		b := bytes.newBuffer(nil)
-		b.writeString("Hello, ")
-		b.writeString("Go+")
-		println(b.string)
-		`,
-		"Hello, Go+\n",
-	)
-	cltest.Expect(t, `
-		import "bytes"
-		import "os"
-
-		b := bytes.newBuffer(nil)
-		b.writeString("Hello, ")
-		b.writeString("Go+")
-		println(b.string2)
-		`,
-		"",
-		nil, // panic
-	)
-	cltest.Expect(t, `
-		import "bytes"
-
-		bytes.newBuf()
-		`,
-		"",
-		nil, // panic
-	)
-}
 
 func TestUnbound(t *testing.T) {
 	cltest.Expect(t, `
