@@ -3,6 +3,7 @@ package interp
 import (
 	"go/ast"
 	"go/token"
+	"io"
 
 	"github.com/goplus/igo/internal/cl"
 	exec "github.com/goplus/igo/internal/exec/bytecode"
@@ -25,6 +26,11 @@ func CompileAST(pkg *ast.Package, fset *token.FileSet) (app *Program, err error)
 	}
 	code := b.Resolve()
 	return (*Program)(code), nil
+}
+
+// Dump dumps code.
+func (p *Program) Dump(w io.Writer) {
+	((*exec.Code)(p)).Dump(w)
 }
 
 // -----------------------------------------------------------------------------

@@ -9,6 +9,7 @@ import (
 	_ "github.com/goplus/igo/lib/io"
 	_ "github.com/goplus/igo/lib/io/ioutil"
 	_ "github.com/goplus/igo/lib/log"
+	_ "github.com/goplus/igo/lib/math"
 	_ "github.com/goplus/igo/lib/os"
 	_ "github.com/goplus/igo/lib/reflect"
 	_ "github.com/goplus/igo/lib/sort"
