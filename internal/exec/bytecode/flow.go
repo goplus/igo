@@ -17,7 +17,7 @@
 package bytecode
 
 import (
-	"github.com/goplus/igo/internal/exec.spec"
+	"github.com/goplus/igo/exec.spec"
 	"github.com/qiniu/x/errors"
 	"github.com/qiniu/x/log"
 )

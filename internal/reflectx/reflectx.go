@@ -9,3 +9,7 @@ func Field(s reflect.Value, i int) reflect.Value {
 func FieldByIndex(s reflect.Value, index []int) reflect.Value {
 	panic("todo")
 }
+
+func StructOf(fields []reflect.StructField) reflect.Type {
+	panic("todo")
+}

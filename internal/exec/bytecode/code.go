@@ -23,7 +23,7 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/goplus/igo/internal/exec.spec"
+	"github.com/goplus/igo/exec.spec"
 )
 
 // -----------------------------------------------------------------------------

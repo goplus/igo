@@ -19,7 +19,7 @@ package bytecode
 import (
 	"testing"
 
-	"github.com/goplus/igo/internal/exec.spec"
+	"github.com/goplus/igo/exec.spec"
 	"github.com/qiniu/x/log"
 	"github.com/qiniu/x/ts"
 )

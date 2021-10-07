@@ -20,8 +20,8 @@ import (
 	"reflect"
 	"unsafe"
 
+	"github.com/goplus/igo/exec.spec"
 	"github.com/goplus/igo/internal/ast/gopiter"
-	"github.com/goplus/igo/internal/exec.spec"
 	"github.com/qiniu/x/log"
 )
 

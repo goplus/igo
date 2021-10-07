@@ -23,7 +23,7 @@ import (
 	"strings"
 	"testing"
 
-	exec "github.com/goplus/igo/internal/exec.spec"
+	exec "github.com/goplus/igo/exec.spec"
 )
 
 const (

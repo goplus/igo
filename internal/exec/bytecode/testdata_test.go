@@ -21,7 +21,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/goplus/gop/cl/cltest"
+	"github.com/goplus/igo/cl/cltest"
 )
 
 // -----------------------------------------------------------------------------

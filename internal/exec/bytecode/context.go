@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/goplus/igo/internal/exec.spec"
+	"github.com/goplus/igo/exec.spec"
 	"github.com/qiniu/x/log"
 )
 

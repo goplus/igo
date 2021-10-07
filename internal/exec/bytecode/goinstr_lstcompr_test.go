@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/goplus/igo/internal/exec.spec"
+	"github.com/goplus/igo/exec.spec"
 )
 
 func TestLargeSlice(t *testing.T) {
